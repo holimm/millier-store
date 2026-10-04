@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode } from "react";
 import { CustomText } from "./common";
 import { CiCreditCard1, CiDeliveryTruck } from "react-icons/ci";
@@ -17,13 +19,13 @@ export const PickUs = () => {
           <CustomText
             type="paragraph"
             topClass="mt-4"
-            extraClass="!text-black !font-semibold !text-md lg:!text-xl"
+            extraClass="!text-black !font-semibold !text-lg lg:!text-xl"
           >
             {objectText.title}
           </CustomText>
           <CustomText
             type="paragraph"
-            extraClass="!text-black text-md lg:!text-xl"
+            extraClass="!text-black !text-base lg:!text-lg"
           >
             {objectText.description}
           </CustomText>

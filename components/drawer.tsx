@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Drawer,
   Input,
@@ -32,16 +34,32 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   children,
   ...props
 }) => {
+  const numericSize =
+    typeof props.width === "number"
+      ? props.width
+      : typeof props.height === "number"
+        ? props.height
+        : undefined;
+
   return (
     <Drawer
       className={props.className}
-      height={props.height}
-      width={props.width}
+      size={numericSize ?? "default"}
       title={props.title}
       placement={props.placement}
       open={props.open}
       onClose={props.onClose}
       closable={props.closable}
+      styles={
+        props.width || props.height
+          ? {
+              wrapper: {
+                width: props.width,
+                height: props.height,
+              },
+            }
+          : undefined
+      }
     >
       {children}
     </Drawer>
@@ -51,13 +69,13 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 export const CartDrawer = (props: NavDrawerModel) => {
   return (
     <Drawer
-      height={"4rem"}
       placement={props.placement}
       open={props.showDrawer}
       onClose={props.handleShowDrawer}
       title={"My Cart"}
-      width={"30vw"}
+      size="default"
       closable={true}
+      styles={{ wrapper: { width: "min(30vw, 420px)" } }}
     ></Drawer>
   );
 };

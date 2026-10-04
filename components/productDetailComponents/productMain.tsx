@@ -1,15 +1,14 @@
+"use client";
+
 import {
   Button,
   Carousel,
   Col,
-  Collapse,
   Divider,
-  Flex,
   Image,
   Row,
   Spin,
 } from "antd";
-import { motion } from "framer-motion";
 import { CustomText } from "@/components/homePage/common";
 import {
   ProductColorType,
@@ -49,291 +48,337 @@ export default function ProductMain({
   onChangeProductMemory: Function;
 }) {
   const dispatch = useAppDispatch();
-  const cartData = useAppSelector(getCart);
+  useAppSelector(getCart);
   const productDetailData = productDetail.data;
   const [totalPriceProduct, setTotalPriceProduct] = useState(
     productDetailData.basePrice
   );
 
   useEffect(() => {
-    let total = productDetailData.basePrice;
-    if (!isEmpty(productStorage)) total += productStorage.price;
-    if (!isEmpty(productMemory)) total += productMemory.price;
+    let total = productDetailData.basePrice || 0;
+    if (!isEmpty(productStorage)) total += productStorage.price || 0;
+    if (!isEmpty(productMemory)) total += productMemory.price || 0;
     setTotalPriceProduct(total);
-    total = productDetailData.basePrice;
   }, [productDetailData, productColor, productStorage, productMemory]);
 
   const handleAddToCart = (data: CartType) => {
     dispatch(saveCart(data));
   };
 
+  const galleryImages =
+    checkProductExist &&
+    checkColorExist &&
+    productDetailData.images?.[productColor.lowercase!]
+      ? productDetailData.images[productColor.lowercase!]
+      : [];
+
+  const productName = (productDetailData.name || "").toLowerCase();
+  const isMacGallery = productName.includes("mac");
+  // iPhone / accessories assets fill more of the frame than Mac — scale them down
+  // in the PDP gallery so visual product size matches Mac shots.
+  const galleryImageScaleClass = isMacGallery
+    ? ""
+    : productName.includes("airpods")
+      ? "scale-[0.72]"
+      : "scale-[0.58]";
+
+  const showCheckout = !isEmpty(openAddToCart);
+
   return (
-    <Row gutter={30}>
-      <Col xs={24} lg={18}>
-        <div className="!sticky top-28">
-          <Spin spinning={productDetail.loading}>
-            <CustomText
-              type="paragraph"
-              extraClass="!text-black !text-3xl !font-bold"
-            >
-              {checkProductExist && productDetailData.name}
-            </CustomText>
-            <Carousel className=" cursor-pointer" draggable autoplay infinite>
-              {checkProductExist &&
-                checkColorExist &&
-                productDetailData.images[productColor.lowercase].map(
-                  (item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      <Flex
-                        className="lg:max-h-[70vh]"
-                        justify="center"
-                        align="center"
-                      >
-                        <Image
-                          key={index}
-                          src={`${process.env.MONGO_BE_URL + item}`}
-                          preview={false}
-                        ></Image>
-                      </Flex>
-                    </motion.div>
-                  )
-                )}
-            </Carousel>
-            <p className="w-full mt-2 text-center text-black">
-              &larr; Draggable &rarr;
-            </p>
-          </Spin>
+    <div className="w-full">
+      <Spin spinning={productDetail.loading}>
+        <CustomText
+          type="paragraph"
+          extraClass="!text-black !text-2xl lg:!text-4xl !font-bold"
+          topClass="mb-6 lg:mb-8"
+        >
+          {checkProductExist && productDetailData.name}
+        </CustomText>
+      </Spin>
+
+      <Row gutter={[40, 40]} align="top" className="w-full">
+      <Col xs={24} lg={14} className="!max-w-full min-w-0">
+        <div className="lg:sticky lg:top-28 min-w-0">
+          <div className="product-detail-gallery aspect-square w-full max-w-full overflow-hidden rounded-2xl bg-white">
+              {galleryImages.length > 0 ? (
+                <Carousel
+                  className="h-full w-full max-w-full"
+                  draggable
+                  autoplay
+                  infinite
+                  dots
+                >
+                  {galleryImages.map((item, index) => (
+                    <div key={`${item}-${index}`} className="!h-full !w-full">
+                      <div className="flex h-full w-full items-center justify-center overflow-hidden bg-white">
+                        <div
+                          className={`flex h-full w-full items-center justify-center ${galleryImageScaleClass}`}
+                        >
+                          <Image
+                            src={item}
+                            alt={`${productDetailData.name || "Product"} ${index + 1}`}
+                            preview={false}
+                            className="!h-full !w-full object-contain"
+                            rootClassName="!h-full !w-full max-w-full"
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </Carousel>
+              ) : (
+                <div className="h-full w-full bg-neutral-50" />
+              )}
+          </div>
         </div>
       </Col>
-      <Col xs={24} lg={6}>
-        <Flex className="h-full w-full" justify="center" align="center">
-          <div className="h-fit w-fit">
-            <div className="my-8 lg:my-12">
+
+      <Col xs={24} lg={10} className="!max-w-full min-w-0">
+        <div className="h-fit w-full min-w-0">
+          <div className="mb-8 lg:mb-10">
+            <CustomText
+              type="paragraph"
+              extraClass="!text-black !text-xl lg:!text-2xl !font-semibold"
+            >
+              Finish.{" "}
+              <span className="!text-neutral-500 !font-normal">
+                Pick your favorite
+              </span>
+            </CustomText>
+            <CustomText
+              type="paragraph"
+              extraClass="!text-black !text-base lg:!text-lg"
+              topClass="mt-2 mb-4"
+            >
+              Color — {productColor.label || "Select a finish"}
+            </CustomText>
+            <Spin spinning={productDetail.loading}>
+              <div className="flex flex-wrap items-center gap-3">
+                {checkProductExist &&
+                  productDetailData.colors?.map(
+                    (item: ProductColorType, index: number) => {
+                      const selected =
+                        productColor.lowercase === item.lowercase;
+                      return (
+                        <button
+                          key={item.lowercase || index}
+                          type="button"
+                          aria-label={item.label}
+                          title={item.label}
+                          className={`h-9 w-9 rounded-full border transition-all duration-200 ${
+                            selected
+                              ? "border-blue-500 ring-2 ring-blue-200 scale-110"
+                              : "border-neutral-300 hover:border-neutral-500"
+                          }`}
+                          style={{ backgroundColor: item.color }}
+                          onClick={() => onChangeProductColor(item)}
+                        />
+                      );
+                    }
+                  )}
+              </div>
+            </Spin>
+          </div>
+
+          {!isEmpty(productDetailData.storage) && (
+            <div className="mb-8 lg:mb-10">
               <CustomText
                 type="paragraph"
-                extraClass="!text-black !text-3xl font-semibold"
+                extraClass="!text-black !text-xl lg:!text-2xl !font-semibold"
               >
-                Finish.&nbsp;
-                <span className="text-neutral-500">Pick your favorite</span>
-              </CustomText>
-              <CustomText type="paragraph" extraClass="!text-black !text-2xl">
-                Color - {productColor.label}
+                Storage.{" "}
+                <span className="!text-neutral-500 !font-normal">
+                  How much space do you need?
+                </span>
               </CustomText>
               <Spin spinning={productDetail.loading}>
-                <div className="h-fit w-full flex justify-start gap-10">
+                <div className="mt-4 flex flex-col gap-3">
                   {checkProductExist &&
-                    productDetailData.colors.map((item: any, index: number) => (
-                      <div
-                        key={index}
-                        className={`h-8 w-8 rounded-full cursor-pointer border-2 ${
-                          productColor.lowercase === item.lowercase &&
-                          "border-blue-400"
-                        } shadow-md transition-all duration-500`}
-                        style={{ backgroundColor: item.color }}
-                        onClick={() => onChangeProductColor(item)}
-                      ></div>
-                    ))}
-                </div>
-              </Spin>
-            </div>
-            {!isEmpty(productDetailData.storage) && (
-              <div className="my-8 lg:my-14">
-                <CustomText
-                  type="paragraph"
-                  extraClass="!text-black !text-3xl font-semibold"
-                >
-                  Storage.&nbsp;
-                  <span className="text-neutral-500">
-                    How much space do you need?
-                  </span>
-                </CustomText>
-                <Spin spinning={productDetail.loading}>
-                  <div className="h-fit w-full flex-rows justify-start gap-10">
-                    {checkProductExist &&
-                      productDetailData.storage.map(
-                        (item: ProductStorageType, index: number) => (
-                          <div
-                            key={index}
-                            className={`h-fit w-full my-5 grid grid-cols-2 border-[1px] border-neutral-600/50 ${
-                              productStorage.capacity === item.capacity &&
-                              "!border-blue-400"
-                            } rounded-xl cursor-pointer transition-all duration-500`}
+                    productDetailData.storage?.map(
+                      (item: ProductStorageType, index: number) => {
+                        const selected =
+                          productStorage.capacity === item.capacity;
+                        return (
+                          <button
+                            key={`${item.capacity}-${item.unit}-${index}`}
+                            type="button"
+                            className={`flex h-20 w-full items-center rounded-xl border px-4 text-left transition-all duration-200 ${
+                              selected
+                                ? "border-blue-500 bg-blue-50/40"
+                                : "border-neutral-300 hover:border-neutral-500"
+                            }`}
                             onClick={() => onChangeProductStorage(item)}
                           >
-                            <div className="h-full w-full flex items-center px-5">
-                              <CustomText
-                                type="paragraph"
-                                extraClass="!text-black !text-lg font-semibold"
-                              >
-                                {item.capacity}
-                                <span className="!text-md">{item.unit}</span>
-                                <br />
-                                <span className="!text-md !font-normal !text-neutral-500">
+                            <div className="flex w-full items-center justify-between gap-4">
+                              <div className="min-w-0">
+                                <CustomText
+                                  type="paragraph"
+                                  extraClass="!text-black !text-base lg:!text-lg !font-semibold"
+                                >
+                                  {item.capacity}
+                                  {item.unit}
+                                </CustomText>
+                                <CustomText
+                                  type="paragraph"
+                                  extraClass="!text-neutral-500 !text-sm"
+                                >
                                   {item.price !== 0
                                     ? `+ ${NumberToDollarFormat(item.price)}`
-                                    : null}
-                                </span>
-                              </CustomText>
-                            </div>
-                            <div className="h-full w-full flex items-center px-5">
+                                    : "\u00A0"}
+                                </CustomText>
+                              </div>
                               <CustomText
                                 type="paragraph"
-                                extraClass="!text-black !text-md"
-                                topClass="mt-3"
+                                extraClass="!text-black !text-sm lg:!text-base"
+                                topClass="text-right shrink-0"
                               >
                                 From{" "}
                                 {NumberToDollarFormat(
-                                  productDetailData.basePrice + item.price
+                                  (productDetailData.basePrice || 0) +
+                                    (item.price || 0)
                                 )}
-                                &nbsp;or{" "}
-                                {NumberToDollarFormat(
-                                  (productDetailData.basePrice + item.price) /
-                                    24
-                                )}
-                                /month for 24 mo.
                               </CustomText>
                             </div>
-                          </div>
-                        )
-                      )}
-                  </div>
-                </Spin>
-              </div>
-            )}
+                          </button>
+                        );
+                      }
+                    )}
+                </div>
+              </Spin>
+            </div>
+          )}
 
-            {!isEmpty(productDetailData.memory) && (
-              <div className="my-8 lg:my-14">
-                <CustomText
-                  type="paragraph"
-                  extraClass="!text-black !text-3xl font-semibold"
-                >
-                  Memory.&nbsp;
-                  <span className="text-neutral-500">
-                    How much memory do you need?
-                  </span>
-                </CustomText>
-                <Spin spinning={productDetail.loading}>
-                  <div className="h-fit w-full flex-rows justify-start gap-10">
-                    {checkProductExist &&
-                      productDetailData.memory.map(
-                        (item: ProductMemoryType, index: number) => (
-                          <div
-                            key={index}
-                            className={`h-fit w-full my-5 border-[1px] border-neutral-600/50 ${
-                              productMemory.capacity === item.capacity &&
-                              "!border-blue-400"
-                            } rounded-xl cursor-pointer transition-all duration-500`}
+          {!isEmpty(productDetailData.memory) && (
+            <div className="mb-8 lg:mb-10">
+              <CustomText
+                type="paragraph"
+                extraClass="!text-black !text-xl lg:!text-2xl !font-semibold"
+              >
+                Memory.{" "}
+                <span className="!text-neutral-500 !font-normal">
+                  How much memory do you need?
+                </span>
+              </CustomText>
+              <Spin spinning={productDetail.loading}>
+                <div className="mt-4 flex flex-col gap-3">
+                  {checkProductExist &&
+                    productDetailData.memory?.map(
+                      (item: ProductMemoryType, index: number) => {
+                        const selected =
+                          productMemory.capacity === item.capacity;
+                        return (
+                          <button
+                            key={`${item.capacity}-${item.unit}-${index}`}
+                            type="button"
+                            className={`flex h-20 w-full items-center rounded-xl border px-4 text-left transition-all duration-200 ${
+                              selected
+                                ? "border-blue-500 bg-blue-50/40"
+                                : "border-neutral-300 hover:border-neutral-500"
+                            }`}
                             onClick={() => onChangeProductMemory(item)}
                           >
-                            <div className="h-[7em] w-full flex items-center px-5 py-5">
+                            <div className="min-w-0">
                               <CustomText
                                 type="paragraph"
-                                extraClass="!text-black !text-lg font-semibold"
+                                extraClass="!text-black !text-base lg:!text-lg !font-semibold"
                               >
                                 {item.capacity}
-                                <span className="!text-md">
-                                  {item.unit} unified memory
-                                </span>
-                                <br />
-                                <span className="!text-md !font-normal !text-neutral-500">
-                                  {item.price !== 0
-                                    ? `+ ${NumberToDollarFormat(item.price)}`
-                                    : null}
-                                </span>
+                                {item.unit} unified memory
+                              </CustomText>
+                              <CustomText
+                                type="paragraph"
+                                extraClass="!text-neutral-500 !text-sm"
+                              >
+                                {item.price !== 0
+                                  ? `+ ${NumberToDollarFormat(item.price)}`
+                                  : "\u00A0"}
                               </CustomText>
                             </div>
-                          </div>
-                        )
-                      )}
-                  </div>
-                </Spin>
-              </div>
-            )}
-
-            <div className="mt-8 mb-0 lg:my-14">
-              <Collapse
-                className="w-full !p-0"
-                collapsible="header"
-                activeKey={openAddToCart}
-                items={[
-                  {
-                    key: "1",
-                    label: "",
-                    children: (
-                      <div className="w-full">
-                        <CustomText
-                          type="paragraph"
-                          extraClass="!text-black !text-3xl font-semibold"
-                        >
-                          Proceed.
-                        </CustomText>
-                        <CustomText
-                          type="paragraph"
-                          extraClass="!text-black !text-lg"
-                        >
-                          {`${checkProductExist && productDetailData.name}`}
-                          <br />
-                          {`${productColor.label}`}
-                          {!isEmpty(productDetailData.storage) && (
-                            <>
-                              <br />
-                              {productStorage.capacity} {productStorage.unit}{" "}
-                              Storage
-                            </>
-                          )}
-                          {!isEmpty(productDetailData.memory) && (
-                            <>
-                              <br />
-                              {productMemory.capacity} {productMemory.unit}{" "}
-                              Memory
-                            </>
-                          )}
-                          <Divider />
-                          <b>{`${NumberToDollarFormat(
-                            checkProductExist && totalPriceProduct
-                          )}`}</b>
-                        </CustomText>
-                        <Button
-                          className="w-full my-4"
-                          type="default"
-                          size="large"
-                          onClick={() => {
-                            handleAddToCart({
-                              name: productDetailData.name,
-                              storage: productStorage,
-                              price: totalPriceProduct,
-                              memory: productMemory,
-                              color: productColor,
-                              quantity: 1,
-                            });
-                          }}
-                        >
-                          Add To Cart
-                        </Button>
-                      </div>
-                      // <div className="h-fit w-full bg-slate-600">
-                      //   <motion.div className="bg-neutral-100 h-fit w-full relative rounded-xl">
-                      //     <div className="h-fit w-full my-8">
-                      //       <div className="h-fit w-full flex justify-start items-end px-40 pt-20">
-                      //         <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-whitetitanium-select_AV2?wid=362&hei=244&fmt=p-jpg&qlt=95&.v=1693080287014" />
-                      //       </div>
-                      //     </div>
-                      //   </motion.div>
-                      // </div>
-                    ),
-                    showArrow: false,
-                  },
-                ]}
-                ghost
-              />
+                          </button>
+                        );
+                      }
+                    )}
+                </div>
+              </Spin>
             </div>
+          )}
+
+          <div
+            className={`rounded-2xl border border-neutral-200 bg-neutral-50 p-5 transition-opacity duration-300 ${
+              showCheckout ? "opacity-100" : "opacity-50"
+            }`}
+          >
+            <CustomText
+              type="paragraph"
+              extraClass="!text-black !text-xl lg:!text-2xl !font-semibold"
+            >
+              Proceed.
+            </CustomText>
+            <CustomText
+              type="paragraph"
+              extraClass="!text-black !text-base"
+              topClass="mt-2"
+            >
+              {checkProductExist && productDetailData.name}
+              {productColor.label && (
+                <>
+                  <br />
+                  {productColor.label}
+                </>
+              )}
+              {!isEmpty(productDetailData.storage) &&
+                productStorage.capacity && (
+                  <>
+                    <br />
+                    {productStorage.capacity}
+                    {productStorage.unit} Storage
+                  </>
+                )}
+              {!isEmpty(productDetailData.memory) &&
+                productMemory.capacity && (
+                  <>
+                    <br />
+                    {productMemory.capacity}
+                    {productMemory.unit} Memory
+                  </>
+                )}
+            </CustomText>
+            <Divider className="!my-4" />
+            <CustomText
+              type="paragraph"
+              extraClass="!text-black !text-2xl !font-bold"
+            >
+              {NumberToDollarFormat(
+                checkProductExist ? totalPriceProduct : 0
+              )}
+            </CustomText>
+            <Button
+              className="!mt-4 w-full"
+              type="primary"
+              size="large"
+              disabled={!showCheckout || !checkProductExist}
+              onClick={() => {
+                handleAddToCart({
+                  name: productDetailData.name,
+                  storage: productStorage,
+                  price: totalPriceProduct,
+                  memory: productMemory,
+                  color: productColor,
+                  quantity: 1,
+                });
+              }}
+            >
+              Add To Cart
+            </Button>
           </div>
-        </Flex>
+        </div>
       </Col>
-    </Row>
+      </Row>
+    </div>
   );
 }

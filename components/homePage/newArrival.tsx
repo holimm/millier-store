@@ -1,3 +1,5 @@
+"use client";
+
 import { RenderProductCard } from "@/components/common";
 import {
   NumberToDollarFormat,
@@ -21,7 +23,7 @@ export const HomepageNewArrival = ({
     loading: any;
   };
 }) => {
-  const carouselRef = useRef<CarouselRef>();
+  const carouselRef = useRef<CarouselRef>(null);
   const screenSize = useBreakpoint();
   const carouselSlideToShow = getTotalCarouselSlide(screenSize);
   const [currentCarouselSlide, setCurrentCarouselSlide] = useState<number>(0);
@@ -37,11 +39,16 @@ export const HomepageNewArrival = ({
 
   return (
     <>
-      <Typography.Paragraph className="text-center text-3xl lg:text-4xl font-semibold">
-        <span className="!font-sf_pro">New Arrival</span>
+      <Typography.Paragraph className="text-center" style={{ marginBottom: 0 }}>
+        <span className="!font-sf_pro !text-3xl lg:!text-4xl !font-semibold !text-black">
+          New Arrival
+        </span>
       </Typography.Paragraph>
-      <Typography.Paragraph className="text-center text-lg">
-        <span className="!font-sf_pro_text_light">
+      <Typography.Paragraph
+        className="text-center"
+        style={{ marginBottom: 0, marginTop: 16 }}
+      >
+        <span className="!font-sf_pro_text_light !text-lg lg:!text-xl !text-neutral-600">
           Introducing our latest collection
         </span>
       </Typography.Paragraph>
@@ -49,7 +56,7 @@ export const HomepageNewArrival = ({
         <div className="h-fit w-full my-10">
           <Carousel
             ref={carouselRef}
-            slidesToShow={checkProductsExist && carouselSlideToShow}
+            slidesToShow={carouselSlideToShow || 2}
             afterChange={(currentSlide: number) =>
               setCurrentCarouselSlide(currentSlide)
             }

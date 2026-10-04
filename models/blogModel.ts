@@ -5,8 +5,13 @@ export interface BlogType {
   content?: string;
   chapeau?: string;
   category?: string;
+  tags?: string[];
+  readTime?: string;
   images?: {
     thumbnail?: string;
+    alt?: string;
+    credit?: string;
+    creditUrl?: string;
   };
   author?: {
     name?: string;

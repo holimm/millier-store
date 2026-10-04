@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomText } from "@/components/homePage/common";
 import { NumberToDollarFormat } from "@/helpers/commonHelpers";
 import { CheckoutInformationType, OrderDateType } from "@/models/orderModel";

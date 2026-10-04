@@ -1,7 +1,9 @@
+"use client";
+
 import { useAuthen } from "@/hooks/useAuthen";
 import { isEmpty } from "lodash";
-import { useRouter } from "next/router";
-import { ReactNode, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const AuthGate = ({ children }: { children: any }) => {
   const router = useRouter();
@@ -9,7 +11,7 @@ const AuthGate = ({ children }: { children: any }) => {
 
   useEffect(() => {
     isEmpty(authenAccount) && router.push("/");
-  }, [authenAccount]);
+  }, [authenAccount, router]);
 
   return <>{children(authenAccount)}</>;
 };

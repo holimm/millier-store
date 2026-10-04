@@ -33,7 +33,7 @@ import {
 } from "@/helpers/commonHelpers";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { CustomButton, DescriptionItem, RenderProductCard } from "../common";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getCart } from "@/redux/selectors/cart";
 import { removeFromCart, updateQuantity } from "@/redux/entities/cart";
@@ -48,7 +48,6 @@ import { debounce, isEmpty, throttle } from "lodash";
 import { fetchProductsSearch } from "@/redux/entities/products";
 import { getProductsSearch } from "@/redux/selectors/products";
 import { CustomText } from "../homePage/common";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginLayout from "../googleLogin";
 import { getLoginGoogleLoading } from "@/redux/selectors/googleLogin";
 import {
@@ -79,7 +78,7 @@ export const HeaderSearchDrawer: React.FC<NavigationDrawerProps> = (props) => {
         content: "Please enter a product's name",
       });
     } else {
-      router.push({ pathname: `/search/${keyword}` });
+      router.push(`/search/${keyword}`);
       props.onClose();
     }
   };
@@ -113,7 +112,7 @@ export const HeaderSearchDrawer: React.FC<NavigationDrawerProps> = (props) => {
         <Input
           className="w-full"
           size="large"
-          bordered={false}
+          variant="borderless"
           placeholder="Enter a product's name ..."
           onChange={(e) => onChangeSearchKeyword(e.target.value)}
           allowClear
@@ -136,7 +135,7 @@ export const HeaderSearchDrawer: React.FC<NavigationDrawerProps> = (props) => {
                   <Link href={`/products/${item._id}`}>
                     <div className="h-fit w-full flex gap-8">
                       <Image
-                        src={`${process.env.MONGO_BE_URL}${item.image}`}
+                        src={`${item.image}`}
                         height={"6em"}
                       />
                       <div className="h-full w-fit">
@@ -226,7 +225,7 @@ export const HeaderCartDrawer: React.FC<NavigationDrawerProps> = (props) => {
                       <Image
                         height={"100%"}
                         width={"100%"}
-                        src={`${process.env.MONGO_BE_URL}${item.color.image}`}
+                        src={`${item.color.image}`}
                         preview={false}
                       />
                     </Flex>
@@ -404,11 +403,7 @@ export const HeaderSigninDrawer: React.FC<NavigationDrawerProps> = (props) => {
                   </CustomButton>
                 </Link>
               </Form.Item>
-              <GoogleOAuthProvider clientId="296248512145-i1qchoom7g7adqiff9fnpeuu597jha7b.apps.googleusercontent.com">
-                <React.StrictMode>
-                  <GoogleLoginLayout />
-                </React.StrictMode>
-              </GoogleOAuthProvider>
+              <GoogleLoginLayout />
               {/* <Form.Item>
                 <CustomButton
                   type="text"
@@ -495,10 +490,15 @@ export const HeaderMenuDrawer = (props) => {
     >
       <Flex className="h-full w-full" justify="center" align="start">
         <div className="h-fit w-fit">
-          <h1 className="text-4xl !font-lobster text-black pr-8">Millier</h1>
+          <Link href="/" aria-label="Millier home" onClick={props.onClose}>
+            <img
+              src="/assets/img/millier-logo.png"
+              alt="Millier"
+              className="h-9 w-auto"
+            />
+          </Link>
           <Divider />
           <div className="h-fit w-fit">
-            <MenuText label="Home" linkHref="/" />
             <MenuText label="Shop" linkHref="/products" />
             <MenuText label="Blog" linkHref="/blogs" />
             <MenuText label="About" linkHref="/about" />

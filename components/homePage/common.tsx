@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { Typography } from "antd";
@@ -18,13 +20,16 @@ export const CustomText = ({
   topClass?: string;
 }) => {
   const renderText = () => {
+    // Size utilities must use !important (and live on the inner span) so they
+    // win over antd Typography defaults when AntdRegistry hashPriority="high".
     if (type === "paragraph")
       return (
-        <Typography.Paragraph className={`${topClass && topClass}`}>
+        <Typography.Paragraph
+          className={topClass || undefined}
+          style={{ marginBottom: 0, fontSize: "inherit" }}
+        >
           <span
-            className={`text-white !font-sf_pro !mt-10 ${
-              !isEmpty(extraClass) && extraClass
-            }`}
+            className={`!font-sf_pro ${!isEmpty(extraClass) ? extraClass : ""}`}
           >
             {children}
           </span>
@@ -32,8 +37,16 @@ export const CustomText = ({
       );
     if (type === "title")
       return (
-        <Typography.Title level={2} className={`${topClass && topClass}`}>
-          <span className="!font-sf_pro">{children}</span>
+        <Typography.Title
+          level={(level as 1 | 2 | 3 | 4 | 5) || 2}
+          className={topClass || undefined}
+          style={{ fontSize: "inherit" }}
+        >
+          <span
+            className={`!font-sf_pro ${!isEmpty(extraClass) ? extraClass : "!text-3xl"}`}
+          >
+            {children}
+          </span>
         </Typography.Title>
       );
   };
@@ -68,21 +81,19 @@ export const CategoryCard = ({
   src: string;
 }) => {
   return (
-    <Link href={`/${toLower(label)}`}>
-      <div
-        className="h-[28em] lg:h-[34em] w-full rounded-xl aspect-[9/16] bg-cover bg-center bg-no-repeat shadow-lg cursor-pointer"
-        style={{
-          backgroundImage: `url(${src})`,
-        }}
-      >
-        <div className="h-full w-full group hover:bg-black/40 hover:backdrop-blur-sm transition-all duration-500 rounded-xl">
-          <div className="h-full w-full opacity-0 group-hover:opacity-100 transition-all duration-700">
-            <div className="h-full w-full flex justify-center items-center">
-              <CustomText type="paragraph" extraClass="!text-4xl">
-                {label}
-              </CustomText>
-            </div>
-          </div>
+    <Link href={`/${toLower(label)}`} className="block w-full">
+      <div className="group relative aspect-[3/4] w-full cursor-pointer overflow-hidden rounded-xl bg-neutral-900 shadow-lg">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
+          style={{
+            backgroundImage: `url(${src})`,
+          }}
+        />
+        <div className="absolute inset-0 rounded-xl bg-black opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-45" />
+        <div className="absolute inset-0 flex items-end justify-center pb-8 transition-all duration-500 ease-out group-hover:pb-10">
+          <CustomText type="paragraph" extraClass="!text-3xl lg:!text-4xl !text-white">
+            {label}
+          </CustomText>
         </div>
       </div>
     </Link>

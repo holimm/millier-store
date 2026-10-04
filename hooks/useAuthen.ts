@@ -1,10 +1,7 @@
-import { UserType } from "@/models/userModel";
-import axiosMongo from "@/network/axiosMongo";
 import { saveUser } from "@/redux/entities/users";
 import { fetchUserSession } from "@/redux/entities/users/asyncThunk";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUser } from "@/redux/selectors/user";
-import userService from "@/services/userService";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
 
@@ -14,7 +11,7 @@ export const useAuthen = () => {
   const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    const handleStorage = (event) => {
+    const handleStorage = () => {
       setRefresh(!refresh);
     };
     window.addEventListener("account_update_information", handleStorage);
@@ -23,7 +20,7 @@ export const useAuthen = () => {
   }, [refresh]);
 
   useEffect(() => {
-    const handleStorage = (event) => {
+    const handleStorage = () => {
       setRefresh(!refresh);
     };
     window.addEventListener("storage", handleStorage);

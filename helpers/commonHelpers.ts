@@ -62,4 +62,6 @@ export const getTotalCarouselSlide = (
   if (screenSize.md) return 3;
   if (screenSize.sm) return 2;
   if (screenSize.xs) return 2;
+  // useBreakpoint() is empty during SSR / first paint — never return undefined
+  return 2;
 };

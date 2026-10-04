@@ -1,4 +1,6 @@
-import { Button, Card, Flex, Image } from "antd";
+"use client";
+
+import { Button, Card, Image } from "antd";
 import { motion } from "framer-motion";
 import { isEmpty } from "lodash";
 import { DescriptionItemModel, SigninButtonProps } from "@/models/navModel";
@@ -33,15 +35,16 @@ export const RenderProductCard: React.FC<ProductCardType> = (props) => {
     <div className="hover:scale-105 transition-all duration-200">
       <Link href={`/products/${props.code}`}>
         <Card
-          className="bg-white !p-0 !border-none cursor-pointer"
+          className="bg-white !p-0 !border-none cursor-pointer h-full"
           cover={
-            <div className="pl-3 pr-3 pt-5">
-              <Flex justify="center">
+            <div className="px-3 pt-5">
+              <div className="product-card-media aspect-square w-full overflow-hidden rounded-lg bg-white">
                 <Image
-                  src={`${process.env.MONGO_BE_URL}${props.srcImage}`}
+                  src={`${props.srcImage}`}
                   preview={false}
+                  alt={props.name}
                 />
-              </Flex>
+              </div>
             </div>
           }
         >
@@ -161,7 +164,7 @@ export const CategoryDescriptionTabItem = ({
                       </CustomText>
                       <img
                         className="object-contain object-bottom mx-auto w/3/4 lg:w-1/2"
-                        src={`${process.env.MONGO_BE_URL}${item.image}`}
+                        src={`${item.image}`}
                       />
                     </div>
                   </div>
@@ -209,7 +212,7 @@ export const CategoryDescriptionTabItem = ({
                       <div className="h-full w-9/12 mx-auto mt-2 lg:mt-0 lg:w-full flex justify-center items-end">
                         <img
                           className="object-contain object-bottom mx-auto"
-                          src={`${process.env.MONGO_BE_URL}${item.image}`}
+                          src={`${item.image}`}
                         />
                       </div>
                     </div>
@@ -258,7 +261,7 @@ export const CategoryDescriptionTabItem = ({
                       <div className="h-full w-9/12 mx-auto mt-2 lg:mt-0 lg:w-full flex justify-center items-end">
                         <img
                           className="object-contain object-bottom mx-auto"
-                          src={`${process.env.MONGO_BE_URL}${item.image}`}
+                          src={`${item.image}`}
                         />
                       </div>
                     </div>
@@ -286,7 +289,7 @@ export const CategoryDescriptionTabItem = ({
                     <div className="h-fit w-full">
                       <img
                         className="object-contain mx-auto"
-                        src={`${process.env.MONGO_BE_URL}${item.image}`}
+                        src={`${item.image}`}
                       />
                       <CustomText
                         type="paragraph"
@@ -324,7 +327,7 @@ export const CategoryDescriptionTabItem = ({
                     <div className="h-fit w-full my-8">
                       <img
                         className="object-contain mx-auto"
-                        src={`${process.env.MONGO_BE_URL}${item.image}`}
+                        src={`${item.image}`}
                       />
                       <div className="h-fit w-full">
                         <CustomText
@@ -385,13 +388,13 @@ export const CategoryMacImageCard = ({
 }) => {
   return (
     <div className="h-auto px-[0.625em] relative">
-      {content.map((item: any) => {
+      {content.map((item, index) => {
         return (
-          <>
+          <div key={item.image || index}>
             <div className="h-auto w-full flex justify-center items-center">
               <Image
                 className="rounded-xl"
-                src={`${process.env.MONGO_BE_URL}${item.image}`}
+                src={`${item.image}`}
                 preview={false}
               />
             </div>
@@ -416,7 +419,7 @@ export const CategoryMacImageCard = ({
                 ></div>
               </CustomText>
             </div>
-          </>
+          </div>
         );
       })}
     </div>
@@ -438,22 +441,18 @@ export const CategoryAccessoriesImageCard = ({
   const [showDetail, setShowDetail] = useState(false);
   return (
     <div className="h-fit px-[0.625em] relative">
-      {content.map((item: any) => {
+      {content.map((item, index) => {
         return (
-          <>
-            <div className="h-fit w-full bg-white p-5 rounded-xl shadow">
+          <div
+            key={item.image || index}
+            className="h-fit w-full bg-white p-5 rounded-xl shadow"
+          >
               <div
                 className="h-[26em] lg:h-[28em] w-full bg-contain bg-center bg-no-repeat flex justify-center items-center"
                 style={{
-                  backgroundImage: `url(${process.env.MONGO_BE_URL}${item.image})`,
+                  backgroundImage: `url(${item.image})`,
                 }}
               >
-                {/* <Image
-                  className="rounded-xl"
-                  height={"fit-content"}
-                  src={`${process.env.MONGO_BE_URL}${item.image}`}
-                  preview={false}
-                /> */}
                 {showDetail && (
                   <motion.div
                     className="h-full w-11/12 p-5 bg-white rounded-xl absolute top-0"
@@ -494,8 +493,7 @@ export const CategoryAccessoriesImageCard = ({
                   ></Button>
                 </CustomText>
               </div>
-            </div>
-          </>
+          </div>
         );
       })}
     </div>

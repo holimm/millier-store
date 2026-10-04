@@ -1,3 +1,5 @@
+"use client";
+
 import { DescriptionItem } from "@/components/common";
 import { NumberToDollarFormat } from "@/helpers/commonHelpers";
 import { CartType } from "@/models/cartModel";
@@ -36,7 +38,7 @@ export const ListCart = ({
                 <Image
                   height={"100%"}
                   width={"100%"}
-                  src={`${process.env.MONGO_BE_URL}${item.color.image}`}
+                  src={`${item.color.image}`}
                   preview={false}
                 />
               </Flex>

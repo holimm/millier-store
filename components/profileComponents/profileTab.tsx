@@ -1,3 +1,5 @@
+"use client";
+
 import { Divider } from "antd";
 import { UserType } from "@/models/userModel";
 import { CustomText } from "../homePage/common";

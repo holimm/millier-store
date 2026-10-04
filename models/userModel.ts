@@ -19,6 +19,9 @@ export interface UserType {
   token?: string;
   _id?: string;
   remember?: boolean;
+  statusVerify?: boolean;
+  emailVerifyToken?: string;
+  verifyTokenExpireDate?: string;
 }
 
 export interface RegisterAccountType {
