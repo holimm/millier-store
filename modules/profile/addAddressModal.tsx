@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomButton } from "@/components/common";
 import { phoneConstraint } from "@/helpers/constraint/userDataContraint";
 import { UserAddressType, UserType } from "@/models/userModel";

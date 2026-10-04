@@ -1,3 +1,5 @@
+"use client";
+
 import { BlogType } from "@/models/blogModel";
 import { BlogPane } from "@/modules/blogs/blogPane";
 import { Spin, Typography } from "antd";
@@ -14,11 +16,16 @@ export const HomepageBlogs = ({
   const blogListData = first(chunk(blogsList.data, 5));
   return (
     <>
-      <Typography.Paragraph className="text-center text-3xl lg:text-4xl font-semibold">
-        <span className="!font-sf_pro">Blogs</span>
+      <Typography.Paragraph className="text-center" style={{ marginBottom: 0 }}>
+        <span className="!font-sf_pro !text-3xl lg:!text-4xl !font-semibold !text-black">
+          Blogs
+        </span>
       </Typography.Paragraph>
-      <Typography.Paragraph className="text-center text-lg">
-        <span className="!font-sf_pro_text_light">
+      <Typography.Paragraph
+        className="text-center"
+        style={{ marginBottom: 0, marginTop: 16 }}
+      >
+        <span className="!font-sf_pro_text_light !text-lg lg:!text-xl !text-neutral-600">
           Stay up to date with the latest blog posts
         </span>
       </Typography.Paragraph>

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Button, Row, Col, Flex } from "antd";
 import {
@@ -94,6 +96,13 @@ const HeaderNavigation: React.FC = () => {
                     onClick={handleMenuDrawer}
                     icon={<MenuOutlined />}
                   ></Button>
+                  <Link href="/" aria-label="Millier home" className="flex items-center">
+                    <img
+                      src="/assets/img/millier-logo.png"
+                      alt="Millier"
+                      className="h-8 w-auto"
+                    />
+                  </Link>
                 </Flex>
               </div>
               <div className="h-full w-full hidden lg:block">
@@ -103,10 +112,17 @@ const HeaderNavigation: React.FC = () => {
                   justify="start"
                   align="center"
                 >
-                  <h1 className="text-4xl !font-lobster text-black pr-8">
-                    Millier
-                  </h1>
-                  <ScreenButton linkHref="/" label="Home" />
+                  <Link
+                    href="/"
+                    aria-label="Millier home"
+                    className="mr-6 flex items-center"
+                  >
+                    <img
+                      src="/assets/img/millier-logo.png"
+                      alt="Millier"
+                      className="h-9 w-auto"
+                    />
+                  </Link>
                   <ScreenButton linkHref="/products" label="Shop" />
                   <ScreenButton linkHref="/blogs" label="Blog" />
                   <ScreenButton linkHref="/about" label="About" />

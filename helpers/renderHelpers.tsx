@@ -1,3 +1,5 @@
+"use client";
+
 import { Spin } from "antd";
 
 export const WaitingLoading = ({ loading }: { loading: boolean }) => {

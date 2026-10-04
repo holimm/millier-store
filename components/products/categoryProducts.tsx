@@ -1,3 +1,5 @@
+"use client";
+
 import { ProductDetailType } from "@/models/productDetailModel";
 import { ProductsType } from "@/models/productModel";
 import { Button, Carousel, Empty, Grid, Spin, Tabs, Typography } from "antd";
@@ -30,7 +32,7 @@ export const CategoryProducts = ({
   onChangeProductSeries?: (activeKey: string) => void;
   exploreMore?: boolean;
 }) => {
-  const carouselRef = useRef<CarouselRef>();
+  const carouselRef = useRef<CarouselRef>(null);
   const screenSize = useBreakpoint();
   const carouselSlideToShow = getTotalCarouselSlide(screenSize);
   const [currentCarouselSlide, setCurrentCarouselSlide] = useState<number>(0);
@@ -44,12 +46,16 @@ export const CategoryProducts = ({
         return true;
     }
   };
-  console.log(title, ": ", productListData);
-
   return (
     <div className="mt-10 lg:mt-20 first:my-0">
-      <Typography.Title className="text-center">
-        <span className="!font-sf_pro">{title}</span>
+      <Typography.Title
+        level={2}
+        className="text-center"
+        style={{ fontSize: "inherit", marginBottom: "0.5em" }}
+      >
+        <span className="!font-sf_pro !text-3xl lg:!text-5xl !font-semibold !text-black">
+          {title}
+        </span>
       </Typography.Title>
       {!isEmpty(productSeries) && (
         <Tabs
@@ -63,7 +69,7 @@ export const CategoryProducts = ({
           <>
             <Carousel
               ref={carouselRef}
-              slidesToShow={carouselSlideToShow}
+              slidesToShow={carouselSlideToShow || 2}
               afterChange={(currentSlide: number) =>
                 setCurrentCarouselSlide(currentSlide)
               }
@@ -71,17 +77,15 @@ export const CategoryProducts = ({
               waitForAnimate
             >
               {productListData.map((item: ProductsType, index: number) => (
-                <>
-                  <div key={index}>
-                    <RenderProductCard
-                      code={item._id}
-                      name={item.name}
-                      description={item.description}
-                      price={`From ${NumberToDollarFormat(item.lowest_price)}`}
-                      srcImage={item.image}
-                    />
-                  </div>
-                </>
+                <div key={item._id || index}>
+                  <RenderProductCard
+                    code={item._id}
+                    name={item.name}
+                    description={item.description}
+                    price={`From ${NumberToDollarFormat(item.lowest_price)}`}
+                    srcImage={item.image}
+                  />
+                </div>
               ))}
             </Carousel>
             <div className="flex gap-5 justify-end h-fit w-full">

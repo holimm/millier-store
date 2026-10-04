@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomText } from "@/components/homePage/common";
 import { UserAddressType } from "@/models/userModel";
 import { Form, Input } from "antd";

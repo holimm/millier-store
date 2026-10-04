@@ -8,7 +8,7 @@ export const fullnameConstraint: any = [
     message: "*Fullname can only contain maximum 50 characters",
   },
   {
-    pattern: /^[\p{L}']+(?: [\p{L}']+)+$/u,
+    pattern: /^[A-Za-zÀ-ÖØ-öø-ÿ']+(?: [A-Za-zÀ-ÖØ-öø-ÿ']+)+$/,
     message: "*Please input valid fullname",
   },
 ];

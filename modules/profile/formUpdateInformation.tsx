@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomButton } from "@/components/common";
 import { CustomText } from "@/components/homePage/common";
 import {

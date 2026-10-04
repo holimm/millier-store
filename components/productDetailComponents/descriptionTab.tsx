@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { CustomText } from "@/components/homePage/common";
 import {
@@ -27,6 +29,11 @@ export default function DescriptionTabItem({
     image: string;
   }[];
 }) {
+  const sectionTitle =
+    title && title !== "null"
+      ? title.charAt(0).toUpperCase() + title.slice(1)
+      : title;
+
   const renderItem = () => {
     if (type === "text")
       return (
@@ -36,7 +43,10 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({
+            title: sectionTitle,
+            topClass: "!text-center mt-10",
+          })}
           {content.map((item: any, index: any) => (
             <div key={index}>
               {item.image === "null" && (
@@ -64,14 +74,17 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({
+            title: sectionTitle,
+            topClass: "!text-center mt-10",
+          })}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {content.map((item: any, index: number) => (
               <div key={index} className="h-fit w-full">
                 <motion.div
-                  className="bg-black h-[26em] lg:h-[35em] w-full my-10 bg-cover bg-center bg-no-repeat rounded-xl"
+                  className="bg-neutral-100 h-[22em] lg:h-[28em] w-full my-8 bg-contain bg-center bg-no-repeat rounded-xl border border-neutral-100"
                   style={{
-                    backgroundImage: `url(${process.env.MONGO_BE_URL}${item.image})`,
+                    backgroundImage: `url(${item.image})`,
                   }}
                   viewport={{ once: true }}
                   initial="offscreen"
@@ -80,7 +93,7 @@ export default function DescriptionTabItem({
                 ></motion.div>
                 <CustomText
                   type="paragraph"
-                  extraClass="!text-black !text-lg"
+                  extraClass="!text-black !text-base lg:!text-lg"
                   topClass="w-full"
                 >
                   <div
@@ -102,15 +115,18 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({
+            title: sectionTitle,
+            topClass: "!text-center mt-10",
+          })}
           {content.map((item: any, index: number) => (
             <div key={index} className="h-fit w-full">
-              <motion.div className="bg-black h-fit w-full my-10 py-2 lg:py-4 relative rounded-xl">
-                <div className="h-fit w-full my-8">
+              <motion.div className="bg-neutral-50 h-fit w-full my-8 py-6 lg:py-8 relative rounded-2xl border border-neutral-100">
+                <div className="h-fit w-full px-4 lg:px-10">
                   <div className="h-fit w-full">
                     <CustomText
                       type="paragraph"
-                      extraClass="!text-white !text-2xl"
+                      extraClass="!text-black !text-lg lg:!text-2xl"
                       topClass="w-full text-center"
                     >
                       <div
@@ -121,8 +137,9 @@ export default function DescriptionTabItem({
                     </CustomText>
                   </div>
                   <img
-                    className="object-contain mx-auto mt-10"
-                    src={`${process.env.MONGO_BE_URL}${item.image}`}
+                    className="object-contain mx-auto mt-8 max-h-[28rem] w-auto max-w-full"
+                    src={`${item.image}`}
+                    alt=""
                   />
                 </div>
               </motion.div>
@@ -138,16 +155,19 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({
+            title: sectionTitle,
+            topClass: "!text-center mt-10",
+          })}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {content.map((item: any, index: number) => (
               <div key={index} className="h-fit w-full">
-                <motion.div className="bg-black h-fit w-full py-4 relative rounded-xl">
+                <motion.div className="bg-neutral-50 h-fit w-full py-4 relative rounded-2xl border border-neutral-100">
                   <div className="h-fit w-full my-8">
                     <div className="h-fit w-full">
                       <CustomText
                         type="paragraph"
-                        extraClass="!text-white !text-2xl"
+                        extraClass="!text-black !text-lg lg:!text-2xl"
                         topClass="w-full text-center"
                       >
                         <div
@@ -159,7 +179,7 @@ export default function DescriptionTabItem({
                     </div>
                     <img
                       className="object-contain mx-auto mt-10"
-                      src={`${process.env.MONGO_BE_URL}${item.image}`}
+                      src={`${item.image}`}
                     />
                   </div>
                 </motion.div>
@@ -176,7 +196,7 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({ title: sectionTitle, topClass: "!text-center mt-10" })}
           {content.map((item: any, index: number) => (
             <div key={index} className="h-fit w-full">
               <motion.div className="bg-neutral-100 h-fit w-full my-10 py-4 relative rounded-xl">
@@ -196,7 +216,7 @@ export default function DescriptionTabItem({
                   </div>
                   <img
                     className="object-contain mx-auto mt-10"
-                    src={`${process.env.MONGO_BE_URL}${item.image}`}
+                    src={`${item.image}`}
                   />
                 </div>
               </motion.div>
@@ -212,7 +232,7 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({ title: sectionTitle, topClass: "!text-center mt-10" })}
           {content.map((item: any, index: number) => (
             <div key={index} className="h-fit w-full">
               <motion.div className="bg-neutral-100 h-fit w-full my-10 pt-4 relative rounded-xl">
@@ -232,7 +252,7 @@ export default function DescriptionTabItem({
                   </div>
                   <img
                     className="object-contain mx-auto mt-10"
-                    src={`${process.env.MONGO_BE_URL}${item.image}`}
+                    src={`${item.image}`}
                   />
                 </div>
               </motion.div>
@@ -248,7 +268,7 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({ title: sectionTitle, topClass: "!text-center mt-10" })}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {content.map((item: any, index: number) => (
               <div key={index} className="h-fit w-full">
@@ -269,7 +289,7 @@ export default function DescriptionTabItem({
                     </div>
                     <img
                       className="object-contain mx-auto mt-10"
-                      src={`${process.env.MONGO_BE_URL}${item.image}`}
+                      src={`${item.image}`}
                     />
                   </div>
                 </motion.div>
@@ -286,7 +306,7 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({ title: sectionTitle, topClass: "!text-center mt-10" })}
           {content.map((item: any, index: number) => (
             <div key={index} className="h-fit w-full">
               <motion.div className="bg-neutral-100 h-fit w-full my-10 py-4 relative rounded-xl">
@@ -294,7 +314,7 @@ export default function DescriptionTabItem({
                   <div className="h-fit w-full">
                     <img
                       className="object-contain mx-auto"
-                      src={`${process.env.MONGO_BE_URL}${item.image}`}
+                      src={`${item.image}`}
                     />
                     <CustomText
                       type="paragraph"
@@ -322,7 +342,7 @@ export default function DescriptionTabItem({
           whileInView="onscreen"
           variants={productDescriptionVariants}
         >
-          {renderTitle({ title: title, topClass: "!text-center mt-10" })}
+          {renderTitle({ title: sectionTitle, topClass: "!text-center mt-10" })}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-10 mb-2 lg:mt-10 lg:mb-10">
             {content.map((item: any, index: number) => (
               <div key={index} className="h-fit w-full">
@@ -330,7 +350,7 @@ export default function DescriptionTabItem({
                   <div className="h-fit w-full my-8">
                     <img
                       className="object-contain mx-auto"
-                      src={`${process.env.MONGO_BE_URL}${item.image}`}
+                      src={`${item.image}`}
                     />
                     <div className="h-fit w-full">
                       <CustomText

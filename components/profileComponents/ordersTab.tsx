@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, Col, Divider, Empty, Row, Spin, Tag } from "antd";
 import { UserType } from "@/models/userModel";
 import { CustomText } from "../homePage/common";
